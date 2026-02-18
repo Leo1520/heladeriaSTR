@@ -4,14 +4,32 @@ Backend completo para sistema de heladería con Node.js + Express + MySQL.
 
 ## 🚀 Características Implementadas
 
-✅ Autenticación JWT
-✅ Sistema de roles (ADMIN/CLIENTE)
-✅ CRUD completo de productos
-✅ Subida de imágenes con Multer
-✅ Reemplazo automático de imágenes
-✅ Eliminación de imágenes al borrar producto
-✅ Manejo centralizado de errores
-✅ Arquitectura modular y escalable
+### ✅ Fase 1 - Base del Backend
+✅ Conexión a MySQL  
+✅ Estructura modular profesional  
+✅ Configuración de Express  
+✅ Manejo global de errores  
+✅ Archivos estáticos (imágenes)  
+
+### ✅ Fase 2 - Autenticación y Roles (COMPLETADA)
+✅ Sistema de registro  
+✅ Login con JWT  
+✅ Tokens con expiración de 7 días  
+✅ Middleware de autenticación  
+✅ Middleware de autorización por roles  
+✅ Validación de contraseña (mínimo 6 caracteres)  
+✅ Encriptación con bcrypt  
+✅ Utilidad `generateToken()`  
+✅ Endpoint `/api/auth/me`  
+
+### ✅ Fase 3 - CRUD de Productos
+✅ CRUD completo de productos  
+✅ Subida de imágenes con Multer  
+✅ Reemplazo automático de imágenes  
+✅ Eliminación de imágenes al borrar producto  
+✅ Protección de rutas (solo ADMIN)  
+✅ Validación de tipos de archivo  
+✅ Límite de tamaño (5MB)  
 
 ## 📁 Estructura del Proyecto
 
@@ -86,6 +104,7 @@ npm start
 | POST | `/api/auth/register` | Registrar nuevo usuario | No |
 | POST | `/api/auth/login` | Iniciar sesión | No |
 | GET | `/api/auth/profile` | Obtener perfil del usuario | Sí |
+| GET | `/api/auth/me` | Obtener usuario autenticado | Sí |
 
 ### Productos
 
@@ -130,13 +149,13 @@ Content-Type: application/json
   "success": true,
   "message": "Login exitoso",
   "data": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     "user": {
       "id": 1,
       "nombre": "Juan Pérez",
       "email": "juan@example.com",
       "rol": "CLIENTE"
-    }
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
 }
 ```
@@ -210,11 +229,13 @@ http://localhost:3000/uploads/productos/nombre-imagen.jpg
 
 ## 📝 Notas Importantes
 
-1. La contraseña del administrador en el script SQL es un ejemplo. Debe encriptarse con bcrypt.
-2. Cambia `JWT_SECRET` en producción por una clave segura.
-3. Las imágenes se guardan en `uploads/productos/`.
-4. El servidor valida que las imágenes sean JPEG, JPG, PNG, GIF o WEBP.
-5. Tamaño máximo de imagen: 5MB.
+1. **Contraseñas:** Mínimo 6 caracteres requeridos
+2. **JWT Secret:** Cambia `JWT_SECRET` en producción por una clave segura
+3. **Token:** Expira en 7 días (configurable en `.env`)
+4. **Imágenes:** Se guardan en `uploads/productos/`
+5. **Validación:** Solo imágenes JPEG, JPG, PNG, GIF o WEBP
+6. **Tamaño máximo:** 5MB por imagen
+7. **Roles:** ADMIN tiene acceso completo, CLIENTE solo lectura
 
 ## ✅ Próximos Pasos (Fase 2)
 

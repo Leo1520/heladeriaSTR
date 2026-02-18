@@ -4,7 +4,9 @@ const errorMiddleware = (err, req, res, next) => {
   // Error de validación
   if (err.message.includes('ya está registrado') || 
       err.message.includes('Credenciales inválidas') ||
-      err.message.includes('no encontrado')) {
+      err.message.includes('no encontrado') ||
+      err.message.includes('debe tener al menos 6 caracteres') ||
+      err.message.includes('son requeridos')) {
     return res.status(400).json({
       success: false,
       message: err.message

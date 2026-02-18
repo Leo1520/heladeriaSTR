@@ -1,11 +1,16 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const { pool } = require('../config/database');
+const generateToken = require('../utils/generateToken');
 
 class AuthService {
   // Registrar nuevo usuario
   async register(userData) {
     const { nombre, email, password, telefono, direccion, rol = 'CLIENTE' } = userData;
+
+    // Validar contraseña mínima
+    if (!password || password.length < 6) {
+      throw new Error('La contraseña debe tener al menos 6 caracteres');
+    }
 
     // Verificar si el email ya existe
     const [existing] = await pool.query(
@@ -26,16 +31,29 @@ class AuthService {
       [nombre, email, hashedPassword, telefono || null, direccion || null, rol]
     );
 
-    return {
+    const user = {
       id: result.insertId,
       nombre,
       email,
       rol
     };
+
+    // Generar token JWT
+    const token = generateToken(user);
+
+    return {
+      user,
+      token
+    };
   }
 
   // Login de usuario
   async login(email, password) {
+    // Validar que se proporcionen credenciales
+    if (!email || !password) {
+      throw new Error('Email y contraseña son requeridos');
+    }
+
     // Buscar usuario
     const [users] = await pool.query(
       'SELECT id, nombre, email, password, rol, estado FROM usuarios WHERE email = ?',
@@ -59,21 +77,20 @@ class AuthService {
       throw new Error('Credenciales inválidas');
     }
 
+    // Datos del usuario sin contraseña
+    const userData = {
+      id: user.id,
+      nombre: user.nombre,
+      email: user.email,
+      rol: user.rol
+    };
+
     // Generar token JWT
-    const token = jwt.sign(
-      { id: user.id, email: user.email, rol: user.rol },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
-    );
+    const token = generateToken(userData);
 
     return {
-      token,
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        email: user.email,
-        rol: user.rol
-      }
+      user: userData,
+      token
     };
   }
 

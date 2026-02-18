@@ -30,6 +30,7 @@ const startServer = async () => {
       console.log(`   - POST   http://localhost:${PORT}/api/auth/register`);
       console.log(`   - POST   http://localhost:${PORT}/api/auth/login`);
       console.log(`   - GET    http://localhost:${PORT}/api/auth/profile`);
+      console.log(`   - GET    http://localhost:${PORT}/api/auth/me`);
       console.log(`   - GET    http://localhost:${PORT}/api/productos`);
       console.log(`   - GET    http://localhost:${PORT}/api/productos/:id`);
       console.log(`   - POST   http://localhost:${PORT}/api/productos (ADMIN)`);

@@ -4,11 +4,22 @@ class AuthController {
   // POST /api/auth/register
   async register(req, res, next) {
     try {
-      const user = await authService.register(req.body);
+      const { nombre, email, password } = req.body;
+
+      // Validaciones básicas
+      if (!nombre || !email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: 'Nombre, email y contraseña son requeridos'
+        });
+      }
+
+      const result = await authService.register(req.body);
+      
       res.status(201).json({
         success: true,
         message: 'Usuario registrado exitosamente',
-        data: user
+        data: result
       });
     } catch (error) {
       next(error);
@@ -28,6 +39,7 @@ class AuthController {
       }
 
       const result = await authService.login(email, password);
+      
       res.json({
         success: true,
         message: 'Login exitoso',
@@ -38,7 +50,7 @@ class AuthController {
     }
   }
 
-  // GET /api/auth/profile
+  // GET /api/auth/profile o /api/auth/me
   async getProfile(req, res, next) {
     try {
       const user = await authService.getProfile(req.user.id);
